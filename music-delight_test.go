@@ -1,9 +1,9 @@
-package main
+package musicdelight
 
 import (
 	"io/ioutil"
 	"os"
-	"strconv"
+	"strings"
 	"testing"
 
 	"gitlab.com/gomidi/midi/reader"
@@ -31,8 +31,8 @@ func TestMajorTriad(t *testing.T) {
 		reader.NoteOn(p.noteOn),
 	)
 
-	MajorTriad(C2, strconv.Itoa(1)+". "+Notes[0], TestDirectory)
-	MajorTriad(C2+7, strconv.Itoa(8)+". "+Notes[7], TestDirectory)
+	MajorTriad(C2, TestDirectory)
+	MajorTriad(C2+7, TestDirectory)
 	files, err := ioutil.ReadDir(TestDirectory)
 	if err != nil {
 		t.Errorf("could not read %v directory\n", TestDirectory)
@@ -43,16 +43,36 @@ func TestMajorTriad(t *testing.T) {
 		if err != nil {
 			t.Errorf("could not read SMF file %v\n", s)
 		}
-		stringSlice := s.Name()[len(s.Name())-7:]
-		expectedSuffix := "maj.mid"
-		if stringSlice != expectedSuffix {
-			t.Errorf("file name is wrong, %v should have suffix %v", s.Name(), expectedSuffix)
+		if strings.HasPrefix(s.Name(), "C") {
+			if !strings.Contains(s.Name(), "maj") {
+				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "maj")
+			} else if !strings.HasSuffix(s.Name(), ".mid") {
+				t.Errorf("should end with .mid filename suffix\n")
+			}
+			if !strings.Contains(s.Name(), "E") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "E")
+			} else if !strings.Contains(s.Name(), "G") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "G")
+			}
+		} else if strings.HasPrefix(s.Name(), "G") {
+			if !strings.Contains(s.Name(), "maj") {
+				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "maj")
+			} else if !strings.HasSuffix(s.Name(), ".mid") {
+				t.Errorf("should end with .mid filename suffix\n")
+			}
+			if !strings.Contains(s.Name(), "B") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "B")
+			} else if !strings.Contains(s.Name(), "D") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "D")
+			}
+		} else {
+			t.Errorf("wrong filename %v\n", s.Name())
 		}
 		if Chord[1]-Chord[0] != 4 || Chord[2]-Chord[0] != 7 {
 			t.Errorf("failed to create Major chord from notes: %v %v, %v %v, %v %v\n",
-				NoteToName(Chord[0]), Chord[0],
-				NoteToName(Chord[1]), Chord[1],
-				NoteToName(Chord[2]), Chord[2])
+				NoteToNameAndOctave(Chord[0]), Chord[0],
+				NoteToNameAndOctave(Chord[1]), Chord[1],
+				NoteToNameAndOctave(Chord[2]), Chord[2])
 		}
 		Chord = nil
 	}
@@ -68,8 +88,8 @@ func TestMinorTriad(t *testing.T) {
 		reader.NoteOn(p.noteOn),
 	)
 
-	MinorTriad(C2, strconv.Itoa(0+1)+". "+Notes[0], TestDirectory)
-	MinorTriad(C2+7, strconv.Itoa(0+1+7)+". "+Notes[7], TestDirectory)
+	MinorTriad(C2, TestDirectory)
+	MinorTriad(C2+7, TestDirectory)
 
 	files, err := ioutil.ReadDir(TestDirectory)
 	if err != nil {
@@ -81,16 +101,37 @@ func TestMinorTriad(t *testing.T) {
 		if err != nil {
 			t.Errorf("could not read SMF file %v\n", s)
 		}
-		stringSlice := s.Name()[len(s.Name())-7:]
-		expectedSuffix := "min.mid"
-		if stringSlice != expectedSuffix {
-			t.Errorf("file name is wrong, %v should have suffix %v", s.Name(), expectedSuffix)
+
+		if strings.HasPrefix(s.Name(), "C") {
+			if !strings.Contains(s.Name(), "min") {
+				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "min")
+			} else if !strings.HasSuffix(s.Name(), ".mid") {
+				t.Errorf("should end with .mid filename suffix\n")
+			}
+			if !strings.Contains(s.Name(), "D#") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "D#")
+			} else if !strings.Contains(s.Name(), "G") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "G")
+			}
+		} else if strings.HasPrefix(s.Name(), "G") {
+			if !strings.Contains(s.Name(), "min") {
+				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "min")
+			} else if !strings.HasSuffix(s.Name(), ".mid") {
+				t.Errorf("should end with .mid filename suffix\n")
+			}
+			if !strings.Contains(s.Name(), "A#") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "A#")
+			} else if !strings.Contains(s.Name(), "D") {
+				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "D")
+			}
+		} else {
+			t.Errorf("wrong filename %v\n", s.Name())
 		}
 		if Chord[1]-Chord[0] != 3 || Chord[2]-Chord[0] != 7 {
 			t.Errorf("failed to create Minor chord from notes: %v %v, %v %v, %v %v",
-				NoteToName(Chord[0]), Chord[0],
-				NoteToName(Chord[1]), Chord[1],
-				NoteToName(Chord[2]), Chord[2])
+				NoteToNameAndOctave(Chord[0]), Chord[0],
+				NoteToNameAndOctave(Chord[1]), Chord[1],
+				NoteToNameAndOctave(Chord[2]), Chord[2])
 		}
 		Chord = nil
 	}

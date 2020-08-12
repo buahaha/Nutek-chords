@@ -1,4 +1,4 @@
-package main
+package musicdelight
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 	"gitlab.com/gomidi/midi/writer"
 )
 
-// MajorTriad create major chord
-func MajorTriad(startingKey uint8, fileName string, dir string) {
+// MajorTriad create major chord from key startingKey in directory dir
+func MajorTriad(startingKey uint8, dir string) {
 	// Current working directory
 	workingDirectory, err := os.Getwd()
 
@@ -24,11 +24,19 @@ func MajorTriad(startingKey uint8, fileName string, dir string) {
 
 	var baseKey uint8 = startingKey
 
-	// file name suffix
-	var suffix string = "maj.mid"
+	// chord name
+	var chordName string = NoteToName(baseKey) + "maj"
+
+	// notes in chord name to chord name suffix
+	chordNameSuffix := chordName + " - "
+	chordNameSuffix += NoteToName(baseKey) + " "
+	chordNameSuffix += NoteToName(baseKey+4) + " "
+	chordNameSuffix += NoteToName(baseKey + 7)
+
+	fileName := chordNameSuffix + fileNameSuffix
 
 	// current file to work with
-	currentFile := filepath.Join(file, fileName+suffix)
+	currentFile := filepath.Join(file, fileName)
 
 	// MIDI chord writer function
 	err = writer.WriteSMF(currentFile, 1, func(wr *writer.SMF) error {
@@ -62,7 +70,7 @@ func MajorTriad(startingKey uint8, fileName string, dir string) {
 }
 
 // MinorTriad create minor chord
-func MinorTriad(startingKey uint8, fileName string, dir string) {
+func MinorTriad(startingKey uint8, dir string) {
 	// Current working directory
 	workingDirectory, err := os.Getwd()
 
@@ -76,11 +84,19 @@ func MinorTriad(startingKey uint8, fileName string, dir string) {
 
 	var baseKey uint8 = startingKey
 
-	// file name suffix
-	var suffix string = "min.mid"
+	// chord name
+	var chordName string = NoteToName(baseKey) + "min"
+
+	// notes in chord name to chord name suffix
+	chordNameSuffix := chordName + " - "
+	chordNameSuffix += NoteToName(baseKey) + " "
+	chordNameSuffix += NoteToName(baseKey+3) + " "
+	chordNameSuffix += NoteToName(baseKey + 7)
+
+	fileName := chordNameSuffix + fileNameSuffix
 
 	// current file to work with
-	currentFile := filepath.Join(file, fileName+suffix)
+	currentFile := filepath.Join(file, fileName)
 
 	// MIDI chord writer function
 	err = writer.WriteSMF(currentFile, 1, func(wr *writer.SMF) error {
@@ -118,6 +134,12 @@ var Notes = []string{"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#",
 
 // NoteToName converts a midi note value into its English name
 func NoteToName(note uint8) string {
+	return Notes[note%12]
+}
+
+// NoteToNameAndOctave converts a midi note value into its English name
+// and an octave number
+func NoteToNameAndOctave(note uint8) string {
 	key := Notes[note%12]
 	octave := note/12 - 2 // The MIDI scale starts at octave = -2
 	return key + strconv.Itoa(int(octave))
@@ -126,13 +148,4 @@ func NoteToName(note uint8) string {
 // C2 in Ableton Live - 48
 const C2 uint8 = 48
 
-func main() {
-	fmt.Println("Hello MIDI.") // Say hello :)
-
-	fmt.Println("Writing major triad...")
-	for i := 0; i <= 11; i++ {
-		MajorTriad(C2+uint8(i), strconv.Itoa(i+1)+". "+Notes[i], "Major triad")
-	}
-
-	fmt.Println("Done writing MIDI files. Thank you 🎉")
-}
+const fileNameSuffix string = ".mid"
