@@ -1,4 +1,4 @@
-module github.com/buahaha/music-delight
+module github.com/buahaha/Nutek
 
 go 1.14
 
