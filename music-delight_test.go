@@ -515,7 +515,7 @@ func TestMinor7th(t *testing.T) {
 	os.RemoveAll(TestDirectory)
 }
 
-func TestMajor6th(t *testing.T) {
+func TestChord6th(t *testing.T) {
 
 	// to disable logging, pass mid.NoLogger() as option
 	rd := reader.New(reader.NoLogger(),
@@ -523,8 +523,8 @@ func TestMajor6th(t *testing.T) {
 		reader.NoteOn(p.noteOn),
 	)
 
-	Major6th(C2, TestDirectory)
-	Major6th(C2+7, TestDirectory)
+	Chord6th(C2, TestDirectory)
+	Chord6th(C2+7, TestDirectory)
 	files, err := ioutil.ReadDir(TestDirectory)
 	if err != nil {
 		t.Errorf("could not read %v directory\n", TestDirectory)
@@ -539,8 +539,8 @@ func TestMajor6th(t *testing.T) {
 			t.Errorf("could not read SMF file %v\n", s)
 		}
 		if strings.HasPrefix(s.Name(), "C") {
-			if !strings.Contains(s.Name(), "maj6") {
-				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "maj6")
+			if !strings.Contains(s.Name(), "6th") {
+				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "6th")
 			} else if !strings.HasSuffix(s.Name(), ".mid") {
 				t.Errorf("should end with .mid filename suffix\n")
 			}
@@ -552,8 +552,8 @@ func TestMajor6th(t *testing.T) {
 				t.Errorf("missing note name in filename: %v, missing: %v", s.Name(), "A")
 			}
 		} else if strings.HasPrefix(s.Name(), "G") {
-			if !strings.Contains(s.Name(), "maj6") {
-				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "maj6")
+			if !strings.Contains(s.Name(), "6th") {
+				t.Errorf("file name is wrong, %v should containt name of the chord %v\n", s.Name(), "6th")
 			} else if !strings.HasSuffix(s.Name(), ".mid") {
 				t.Errorf("should end with .mid filename suffix\n")
 			}
@@ -568,7 +568,7 @@ func TestMajor6th(t *testing.T) {
 			t.Errorf("wrong filename %v\n", s.Name())
 		}
 		if Chord[1]-Chord[0] != 4 || Chord[2]-Chord[0] != 7 || Chord[3]-Chord[0] != 9 {
-			t.Errorf("failed to create Major6th chord from notes: %v %v, %v %v, %v %v, %v %v\n",
+			t.Errorf("failed to create 6th chord from notes: %v %v, %v %v, %v %v, %v %v\n",
 				NoteToNameAndOctave(Chord[0]), Chord[0],
 				NoteToNameAndOctave(Chord[1]), Chord[1],
 				NoteToNameAndOctave(Chord[2]), Chord[2],

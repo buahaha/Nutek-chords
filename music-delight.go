@@ -418,13 +418,13 @@ func Minor7th(startingKey uint8, dir string) {
 	}
 }
 
-func Major6th(startingKey uint8, dir string) {
+func Chord6th(startingKey uint8, dir string) {
 	file := workWithDirectories(dir)
 
 	var baseKey uint8 = startingKey
 
 	// chord name
-	var chordName string = NoteToName(baseKey) + "maj6"
+	var chordName string = NoteToName(baseKey) + "6th"
 
 	// notes in chord name to chord name suffix
 	chordNameSuffix := chordName + " - "
