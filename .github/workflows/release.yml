@@ -1,0 +1,26 @@
+name: Main
+
+on:
+  push:
+    branches: ['main']
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        name: [linux, windows, macos]
+        include:
+          - name: linux
+            os: ubuntu-20.04
+          - name: windows
+            os: windows-2019
+          - name: macos
+            os: macOS-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1

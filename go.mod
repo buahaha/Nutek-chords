@@ -1,4 +1,4 @@
-module github.com/buahaha/Nutek
+module github.com/buahaha/Nutek-chords
 
 go 1.14
 
