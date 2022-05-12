@@ -1,9 +1,10 @@
+name: Build Release
+
 on: 
   push:
     branches: ['main']
-    tags:
-      - "v*.*.*"
-name: Build Release
+    # tags:
+    #   - "v*.*.*"
 jobs:
   release-linux-386:
     name: release linux/386
